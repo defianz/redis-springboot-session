@@ -14,6 +14,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    Long idx = 0L;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -27,20 +29,28 @@ public class SessionInterceptor implements HandlerInterceptor {
             logger.info("*** session = " + session.getId());
         }
 
-        if(!request.isRequestedSessionIdValid()){
-            logger.info("세션이 유효하지않습니다");
-            session = request.getSession(true);
-            logger.info("세션을 새로 생성합니다");
-        } else {
-            logger.info("세션이 유효합니다");
-        }
 
+        if (session == null || session.getAttribute("usrSeq") == null || !request.isRequestedSessionIdValid()) {
+           // 로그인 정보 확인하여 세션 저장
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            if(username != null && password != null && username.equals("defian") && password.equals("defian")){
+                session = request.getSession(true);
+                session.setAttribute("usrSeq",idx++);
+                logger.info("세션을 새로 생성합니다");
+            } else {
+                logger.error("로그인 정보가 올바르지 않습니다");
+                response.sendRedirect("/");
+                return false;
+            }
+        }
+ 
 
         logger.info("============ Request Domain       \t:  " + domainName);
         logger.info("============ Request URI          \t:  " + uri);
         logger.info("============ Request Content-Type \t:  " + contentType);
         logger.info("============ Request queryString \t:  " + queryString);
-        logger.info("============ session \t: "+  session.getId());
+        if(session != null) logger.info("============ session \t: "+  session.getId());
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

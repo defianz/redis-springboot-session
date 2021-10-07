@@ -14,8 +14,8 @@ public class WebMvcConfig
 
         SessionInterceptor sessionInterceptor = new SessionInterceptor();
         registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns()
-                .excludePathPatterns("");
+                .addPathPatterns("/session/members/login.do")
+                .excludePathPatterns(" ","/","/error");
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }

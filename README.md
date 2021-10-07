@@ -20,6 +20,7 @@
 - Interceptor 통해 session 저장
 - 로그인 시, 세션 생성하여 redisDB에 저장
 - logback, spring-session-data-redis, spring-boot-starter-data-redis(LettuceConnectionFactory) 사용
+- defian / defian 으로 로그인 
 
 ## 추후 진행해볼 내용
 - 어플리케이션 클러스터 구성하여 세션 끊김현상 있는지 확인
